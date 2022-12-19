@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login-Page</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-div">
+        <div class="logo-div1">
+            <img src="	https://edu-web-fundamentals.web.app/static/media/logo.58169365.png" alt="">
+            <p class="logo-text">Kafene</p>
+        </div>
+        <div class="keypoint-div1">
+            <a href="Orders.html" class="order-page">Orders</a>
+            <a href="Products.html" class="products-page">Products</a>
+            <a href="Users.html" class="users-page">Users</a>
+        </div>
+    </div>
+    <div class="container form">
+        <div class="form-main-div">
+            <form class="form-div" id="loginForm">
+                <h1>Sign In</h1>
+                <input type="text" name="username" placeholder="Enter Username" class="user-div">
+                <input type="password" name="password" placeholder="Enter Password" class="user-div">
+                <input type="submit" value="Login" class="login-div" id="btnId">
+            </form>
+        </div>
+    </div>
+</body>
+<script>
+    const loginForm = document.getElementById("loginForm");
+const loginButton = document.getElementById("btnId");
+
+loginButton.addEventListener("click", (e) => {
+  e.preventDefault();
+  const username = loginForm.username.value;
+  const password = loginForm.password.value;
+
+  if (username === "qaifi" && password === "qaifi") {
+    alert("You have successfully logged in.")
+    window.localStorage.setItem("loginStatus", "true")
+    // location.reload();
+    window.location.href = "Orders.html"
+  } else {
+    alert("Please enter valid credentials!");
+  }
+});
+let status = window.localStorage.getItem("loginStatus");
+if(status == "true"){
+    window.location.href = "Orders.html";
+}
+
+</script>
+</html>

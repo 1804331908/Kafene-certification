@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order-page</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="main-div">
+        <div class="logo-div">
+            <img src="	https://edu-web-fundamentals.web.app/static/media/logo.58169365.png" alt="">
+            <p class="logo-text">Kafene</p>
+        </div>
+        <div class="keypoint-div">
+            <a href="Orders.html" class="order-page">Orders</a>
+            <a href="Products.html" class="products-page">Products</a>
+            <a href="Users.html" class="users-page">Users</a>
+        </div>
+        <div>
+            <a class="logout" onclick="logOut()">Logout</a>
+        </div>
+    </div>
+   <div class="container table1-name">
+        <div class="header">
+            <h1>Orders</h1>
+        </div>
+        <div class="table-box">
+
+
+            <div class="left-div">
+
+                <div class="checkbox-div">
+                    <h3 class="filter">Filter</h3>
+                    <label><input class="option" name="name" type="checkbox" value="New" checked>New</label>
+                    <label><input class="option" name="name" type="checkbox" value="Packed" checked>Packed</label>
+                    <label><input class="option" name="name" type="checkbox" value="InTransit" checked>InTransit</label>
+                    <label><input class="option" name="name" type="checkbox" value="Delivered" checked>Delivered</label>
+                </div>
+
+            </div>
+            <div id="table-wrapper">
+                <div id="table-data">
+                    <table>
+                        <tr>
+                            <th class="column">ID</th>
+                            <th class="column">Customer</th>
+                            <th class="column">Date</th>
+                            <th class="column">Amount</th>
+                            <th class="column">Status</th>
+                        </tr>
+                        <tbody id="table-body">
+
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+
+    let status = window.localStorage.getItem("loginStatus");
+    function logOut(){
+        window.localStorage.setItem("loginStatus", "false")
+        window.location.href = "index.html"
+    }
+
+    let myTable = document.querySelector(".table1-name")
+    if(status == "false"){
+    myTable.style.display = "none"
+    window.location.href = "index.html"
+
+}
+
+        const url = "https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/orders";
+
+let tableBody = document.getElementById("table-body");
+function personTable(items) {
+
+  items.forEach((item) => {
+    const element1 = document.createElement("tr");
+    element1.classList.add("data-row");
+    element1.setAttribute("id", item.id);
+    element1.appendChild(createColumn(item.id, 1));
+    element1.appendChild(createColumn(item.customerName, 2));
+    element1.appendChild(
+      createColumn(item.orderDate + " " + item.orderTime, 3)
+    );
+    element1.appendChild(createColumn(item.amount, 4));
+    element1.appendChild(createColumn(item.orderStatus, 5));
+
+    tableBody.appendChild(element1);
+  });
+}
+function createColumn(data, index) {
+  const column = document.createElement("td");
+  column.classList.add(`column${index}`);
+ column.innerText = data;
+  return column;
+}
+function initializeTable() {
+  $.get(url, (response) => {
+    personTable(response);
+  });
+}
+initializeTable();
+
+$(document).ready(function () {
+  $(".option").on("click", function () {
+    $("#table-body tr").hide();
+    var flag = 1;
+    $("input:checkbox[name=name]:checked").each(function () {
+      flag = 0;
+      var value = $(this).val().toLowerCase();
+
+      $("#table-body tr").filter(function () {
+        if ($(this).text().toLowerCase().indexOf(value) > -1) $(this).show();
+      });
+    });
+    if (flag == 1) $("#table-body tr").hide();
+  });
+});
+    </script>
+</body>
+
+</html>

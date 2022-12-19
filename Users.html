@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users-page</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="main-div">
+      <div class="logo-div">
+        <img
+          src="	https://edu-web-fundamentals.web.app/static/media/logo.58169365.png"
+          alt=""
+        />
+        <p class="logo-text">Kafene</p>
+      </div>
+      <div class="keypoint-div">
+        <a href="Orders.html" class="order-page">Orders</a>
+        <a href="Products.html" class="products-page">Products</a>
+        <a href="Users.html" class="users-page">Users</a>
+      </div>
+      <div>
+        <a class="logout" onclick="logOut()">Logout</a>
+      </div>
+    </div>
+    <div class="container table3-name">
+      <div class="header">
+        <h1>Users</h1>
+      </div>
+
+      <div class="table3-box">
+        <div class="upper-div">
+          <form id="formId">
+            <input
+              type="text"
+              id="myInput"
+              onkeyup="searchFun()"
+              placeholder="Search by names.."
+            />
+            <input type="reset" id="reset" onClick="clearInput()" />
+          </form>
+        </div>
+        <div id="table-wrapper3">
+          <div id="table3-data">
+            <table>
+              <tbody id="table3-body">
+                <tr>
+                  <th class="column2">ID</th>
+                  <th class="column2">User Avatar</th>
+                  <th class="column2">Full Name</th>
+                  <th class="column2">DoB</th>
+                  <th class="column2">Gender</th>
+                  <th class="column2">Current Location</th>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let status = window.localStorage.getItem("loginStatus");
+      function logOut() {
+        window.localStorage.setItem("loginStatus", "false");
+        window.location.href = "index.html";
+      }
+      let myTable2 = document.querySelector(".table3-name");
+
+      if (status == "false") {
+        myTable2.style.display = "none";
+        window.location.href = "index.html";
+      }
+      const url3 = "https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/users";
+      let tableBody3 = document.getElementById("table3-body");
+      let infoContent3 = document.getElementById("info-content");
+      function ThirdpersonTable(items) {
+        items.forEach((item) => {
+          const element3 = document.createElement("tr");
+          element3.classList.add("data-row");
+          element3.setAttribute("id", item.id);
+          element3.appendChild(createColumn(item.id, 1));
+          var img = document.createElement("img");
+          img.setAttribute("src", item.profilePic);
+          element3.appendChild(createwithImg(img, 2));
+
+          element3.appendChild(createColumn(item.fullName, 3));
+          element3.appendChild(createColumn(item.dob, 4));
+          element3.appendChild(createColumn(item.gender, 5));
+          element3.appendChild(
+            createColumn(item.currentCity + " " + item.currentCountry, 6)
+          );
+
+          tableBody3.appendChild(element3);
+        });
+      }
+      function createColumn(data, index) {
+        const column = document.createElement("td");
+        column.classList.add(`column${index}`);
+        column.innerText = data;
+        return column;
+      }
+      function createwithImg(data, index) {
+        const column = document.createElement("td");
+        column.classList.add(`column${index}`);
+        column.appendChild(data);
+        return column;
+      }
+      function ThirdinitializeTable() {
+        $.get(url3, (response) => {
+          ThirdpersonTable(response);
+        });
+      }
+
+      ThirdinitializeTable();
+      const searchFun = () => {
+        let filter = document.getElementById("myInput").value.toUpperCase();
+        let myTable = document.getElementById("table3-body");
+        let tr = myTable.getElementsByTagName("tr");
+
+        for (var i = 0; i < tr.length; i++) {
+          let td = tr[i].getElementsByTagName("td")[2];
+          if (td) {
+            let textValue = td.textContent || td.innerHTML;
+            if (textValue.toUpperCase().indexOf(filter) > -1) {
+              tr[i].style.display = "";
+            } else {
+              tr[i].style.display = "none";
+            }
+          }
+        }
+      };
+      function clearInput() {
+        document.getElementById("myInput").innerHTML = "";
+        var row = document.getElementById("table3-body");
+        var tableRows = row.getElementsByTagName("tr");
+        var rowCount = tableRows.length;
+
+        for (var x = rowCount - 1; x > 0; x--) {
+          row.removeChild(tableRows[x]);
+        }
+        
+        ThirdinitializeTable();
+      }
+    </script>
+  </body>
+</html>

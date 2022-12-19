@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="main-div">
+      <div class="logo-div">
+        <img
+          src="	https://edu-web-fundamentals.web.app/static/media/logo.58169365.png"
+          alt=""
+        />
+        <p class="logo-text">Kafene</p>
+      </div>
+      <div class="keypoint-div">
+        <a href="Orders.html" class="order-page">Orders</a>
+        <a href="Products.html" class="products-page">Products</a>
+        <a href="Users.html" class="users-page">Users</a>
+      </div>
+      <div>
+        <a class="logout" onclick="logOut()">Logout</a>
+      </div>
+    </div>
+    <div class="container table2-name">
+      <div class="header">
+        <h1>Products</h1>
+      </div>
+
+      <div class="table-box">
+        <div class="left-div">
+          <div class="checkbox-div">
+            <h3>Filter</h3>
+            <label
+              ><input
+                class="option1"
+                id="expireDate"
+                name="name1"
+                type="checkbox"
+                onclick="getUser()"
+                value="2022"
+              />Expired</label
+            >
+            <label
+              ><input
+                class="option1"
+                id="lowStock"
+                name="name1"
+                type="checkbox"
+                onclick="getUser()"
+                value="100"
+              />Low Stock</label
+            >
+          </div>
+        </div>
+        <div id="table-wrapper2">
+          <div id="table2-data">
+            <table>
+              <tr>
+                <th class="column1">ID</th>
+                <th class="column1">Product Name</th>
+                <th class="column1">Product Brand</th>
+                <th class="column1">Expiry Date</th>
+                <th class="column1">Unit Price</th>
+                <th class="column1">Stock</th>
+              </tr>
+              <tbody id="table2-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      let status = window.localStorage.getItem("loginStatus");
+      function logOut() {
+        window.localStorage.setItem("loginStatus", "false");
+        window.location.href = "index.html";
+      }
+      let myTable1 = document.querySelector(".table2-name")
+
+if(status == "false"){
+myTable1.style.display = "none"
+window.location.href = "index.html"
+
+}
+      const url2 =
+        "https://5fc1a1c9cb4d020016fe6b07.mockapi.io/api/v1/products";
+
+      let tableBody2 = document.getElementById("table2-body");
+      let infoContent2 = document.getElementById("info-content");
+      function SecpersonTable(items) {
+        items.forEach((item) => {
+          const element2 = document.createElement("tr");
+          element2.classList.add("data-row");
+          element2.setAttribute("id", item.id);
+          element2.appendChild(createColumn(item.id, 1));
+          element2.appendChild(createColumn(item.medicineName, 2));
+          element2.appendChild(createColumn(item.medicineBrand, 3));
+          element2.appendChild(createColumn(item.expiryDate, 4));
+          element2.appendChild(createColumn(item.unitPrice, 5));
+          element2.appendChild(createColumn(item.stock, 6));
+
+          tableBody2.appendChild(element2);
+        });
+      }
+
+      function getUser() {
+        const items = SecinitializeTable();
+        $.get(url2, (items) => {
+          SecpersonTable(items);
+          var today = new Date();
+          var dd = String(today.getDate()).padStart(2, "0");
+          var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+          var yyyy = today.getFullYear();
+
+          today = yyyy + "-" + mm + "-" + dd;
+          let expire = document.getElementById("expireDate").checked;
+          let lowStock = document.getElementById("lowStock").checked;
+          var tableData;
+
+          if (expire && lowStock) {
+            document.getElementById("table2-body").innerHTML = "";
+
+            tableData = items.filter(function (element) {
+              var convertDate = dateFormate(element.expiryDate);
+              return convertDate < today || element.stock < 100;
+            });
+            setDataintoTable(tableData);
+          } else if (expire) {
+            document.getElementById("table2-body").innerHTML = "";
+            tableData = items.filter(function (element) {
+              var convertDate = dateFormate(element.expiryDate);
+              return convertDate < today;
+            });
+            setDataintoTable(tableData);
+          } else if (lowStock) {
+            document.getElementById("table2-body").innerHTML = "";
+
+            tableData = items.filter(function (element) {
+              var convertDate = dateFormate(element.expiryDate);
+              return element.stock < 100;
+            });
+            setDataintoTable(tableData);
+          }
+        });
+      }
+      function createColumn(data, index) {
+        const column = document.createElement("td");
+        column.classList.add(`column${index}`);
+        column.innerText = data;
+        return column;
+      }
+      function SecinitializeTable() {
+        let res;
+
+        return res;
+      }
+
+      function dateFormate(date) {
+        var d = new Date(date);
+
+        month1 = "" + (d.getMonth() + 1);
+        day1 = "" + d.getDate();
+        year1 = d.getFullYear();
+
+        if (month1.length < 2) month1 = "0" + month1;
+        if (day1.length < 2) day1 = "0" + day1;
+
+        return [year1, month1, day1].join("-");
+      }
+      function setDataintoTable(items) {
+        items.forEach((item) => {
+          const element2 = document.createElement("tr");
+          element2.classList.add("data-row");
+          element2.setAttribute("id", item.id);
+          element2.appendChild(createColumn(item.id, 1));
+          element2.appendChild(createColumn(item.medicineName, 2));
+          element2.appendChild(createColumn(item.medicineBrand, 3));
+          element2.appendChild(createColumn(item.expiryDate, 4));
+          element2.appendChild(createColumn(item.unitPrice, 5));
+          element2.appendChild(createColumn(item.stock, 6));
+
+          tableBody2.appendChild(element2);
+        });
+      }
+    </script>
+  </body>
+</html>
